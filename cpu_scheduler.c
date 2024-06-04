@@ -58,7 +58,7 @@ int Priority_Swap()
 
 void Create_Process()
 {
-    srand(0);
+    srand(time(NULL));
 
     for (int i = 0; i < 5; i++)
     {
@@ -411,6 +411,7 @@ void Display_Chart(int time[], int processOrder[], int cnt)
     }
     printf("\n");
 }
+
 /*
 void Preemptive_priority()
 {
@@ -513,8 +514,7 @@ void Preemptive_priority()
         waitingQueue.processes[waitingQueue.front++].PID;
     }
 }
-*/
-/*
+
 void Preemptive_SJF()
 {
     int clk = 0;
@@ -616,29 +616,14 @@ void Preemptive_SJF()
         waitingQueue.processes[waitingQueue.front++].PID;
     }
 }
-*/
 
-void Display_Chart(int time[], int processOrder[], int cnt)
-{
-    for (int i = 0; i < cnt-1; i++)
-    {
-        if(processOrder[i]) { printf("|  P %d  ", processOrder[i]); }
-        else { printf("| IDLE  "); }
-    }
-    printf("|\n");
-    printf("0");
-    for (int i = 0; i < cnt-1; i++)
-    {
-        printf("\t%d", time[i]);
-    }
-    printf("\n");
-}
 
 void Evaluation(int* avgs[])
     {
         printf("%f\n", max(max(avgs[0][0], avgs[1][0]), avgs[2][0]));
         printf("%f\n", max(max(avgs[0][1], avgs[1][1]), avgs[2][1]));
     }
+*/
 
 int main()
 {
