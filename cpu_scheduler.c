@@ -89,7 +89,7 @@ void Config()
     waitingQueue.rear = 0;
 }
 
-int* FCFS()
+void FCFS()
 {
     int clk = 0;
     int currentPID = 0; //idle
@@ -188,7 +188,7 @@ int* FCFS()
     return avg;
 }
 
-int* Non_Preemptive_SJF()
+void Non_Preemptive_SJF()
 {
     int clk = 0;
     int currentPID = 0; //idle
@@ -292,7 +292,7 @@ int* Non_Preemptive_SJF()
     return avg;
 }
 
- int* Non_Preemptive_priority()
+void Non_Preemptive_priority()
 {
     int clk = 0;
     int currentPID = 0; //idle
@@ -616,7 +616,7 @@ void Preemptive_SJF()
         waitingQueue.processes[waitingQueue.front++].PID;
     }
 }
-int* RR()
+void RR()
 {
     int clk = 0;
     int currentPID = 0; //idle
@@ -727,27 +727,18 @@ int* RR()
     avg[1] = avgTurnaroundTime;
     return avg;
 }
-
-
-void Evaluation(int* avgs[])
-    {
-        printf("%f\n", max(max(avgs[0][0], avgs[1][0]), avgs[2][0]));
-        printf("%f\n", max(max(avgs[0][1], avgs[1][1]), avgs[2][1]));
-    }
 */
 
 int main()
 {
-    int avg1[2], avg2[2], avg3[2];
-    int* avgs[3] = {avg1, avg2, avg3};
+
     
     Config();
     Create_Process();
-    avgs[0] = FCFS();
-    avgs[1] = Non_Preemptive_SJF();
-    avgs[2] = Non_Preemptive_priority();
+    FCFS();
+    Non_Preemptive_SJF();
+    Non_Preemptive_priority();
 
-    //Evaluation(avgs);
     //Preemptive_priority();
     
     return 0;
