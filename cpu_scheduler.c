@@ -616,6 +616,117 @@ void Preemptive_SJF()
         waitingQueue.processes[waitingQueue.front++].PID;
     }
 }
+int* RR()
+{
+    int clk = 0;
+    int currentPID = 0; //idle
+    int remainingProcess = 5;
+    int quantum = 3;
+
+    int time[1000];
+    int cnt = 0;
+    int processOrder[1000];
+
+    int waitingTime[5];
+    int turnaroundTime[5];
+    float avgWaitingTime = 0;
+    float avgTurnaroundTime = 0;
+
+    Process RRProcesses[5];
+    for (int i=0; i<5; i++) { RRProcesses[i] = processes[i]; }
+
+    processOrder[cnt++] = currentPID;
+
+    while (remainingProcess > 0) //if there's no remaining process, stop
+    {
+        
+        for (int i=0; i<5; i++) // check arrival time
+        {
+            if (RRProcesses[i].arrivalTime == clk)
+            {
+                readyQueue.processes[readyQueue.rear++] = RRProcesses[i];
+            }
+        }
+
+        if (currentPID == 0)
+        {
+            if (readyQueue.rear != readyQueue.front)
+            {
+                time[cnt-1] = clk;
+                currentPID = readyQueue.processes[readyQueue.front++].PID; //run process
+                waitingTime[currentPID-2] = clk - RRProcesses[currentPID-2].arrivalTime;
+                processOrder[cnt++] = currentPID - 1;
+            }
+        }
+        else if ((--RRProcesses[currentPID-2].cpuBurstTime) == 0) // terminated
+        {
+            time[cnt-1] = clk;
+            remainingProcess--;
+
+            turnaroundTime[currentPID-2] = clk - RRProcesses[currentPID-2].arrivalTime;
+
+            if (readyQueue.rear != readyQueue.front)
+            {
+                currentPID = readyQueue.processes[readyQueue.front++].PID; //run process
+                waitingTime[currentPID-2] = clk - RRProcesses[currentPID-2].arrivalTime;
+                processOrder[cnt++] = currentPID - 1;
+            }
+            else 
+            { 
+                currentPID = 0; //idle
+                processOrder[cnt++] = currentPID;
+            } 
+
+            }
+        else if (clk % quantum == 0)        
+        {
+            if (readyQueue.rear != readyQueue.front)
+            {
+                time[cnt-1] = clk;
+                readyQueue.processes[readyQueue.rear++] = RRProcesses[currentPID-2];
+                currentPID = readyQueue.processes[readyQueue.front++].PID; //run process
+                waitingTime[currentPID-2] = clk - RRProcesses[currentPID-2].arrivalTime;
+                processOrder[cnt++] = currentPID - 1;
+            }
+        }
+
+        clk++;
+    }
+
+    printf("RR:\n");
+    printf("\n");
+
+    Display_Chart(time, processOrder, cnt);
+
+    for (int i=0; i<5; i++) 
+    {
+        avgWaitingTime += waitingTime[i];
+        avgTurnaroundTime += turnaroundTime[i];
+    }
+
+    avgWaitingTime = avgWaitingTime / 5;
+    avgTurnaroundTime = avgTurnaroundTime / 5;
+
+    printf("Average Waiting time - %f\n", avgWaitingTime);
+    printf("Average Turnaround time - %f\n", avgTurnaroundTime);
+    printf("\n");
+
+    while(readyQueue.rear != readyQueue.front)
+    {
+        readyQueue.processes[readyQueue.front++].PID;
+    }
+
+    while(waitingQueue.rear != waitingQueue.front)
+    {
+        waitingQueue.processes[waitingQueue.front++].PID;
+    }
+
+
+    int avg[2];
+    avg[0] = avgWaitingTime;
+    avg[1] = avgTurnaroundTime;
+    return avg;
+}
 
 
 void Evaluation(int* avgs[])
